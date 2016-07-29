@@ -1,23 +1,24 @@
+package apis;
+
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 
-import java.io.IOException;
-
-public class ZKDelete {
+public class ZKSetData {
     private static ZooKeeper zk;
     private static ZooKeeperConnection conn;
 
-    public static void delete(String path) throws KeeperException, InterruptedException {
-        zk.delete(path, zk.exists(path, true).getVersion());
+    public static void update(String path, byte[] data) throws KeeperException, InterruptedException {
+        zk.setData(path, data, zk.exists(path, true).getVersion());
     }
 
     public static void main(String[] args) {
-        String path = "/MyFirstZnode/mysecondsubnode";
+        String path = "/MyFirstZnode";
+        byte[] data = "Success".getBytes();
 
         try {
             conn = new ZooKeeperConnection();
             zk = conn.connect("localhost");
-            delete(path);
+            update(path, data);
             System.out.println("Done.");
         } catch (Exception e) {
             e.printStackTrace();
